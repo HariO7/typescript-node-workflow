@@ -110,5 +110,23 @@ app.post('/comment/:id', (req:Request,res: Response)=>{
     })
 })
 
+app.get('/comment',(req:Request, res: Response)=>{
+    pool.query(`
+        SELECT usercomment.user_id,userdata.username,usercomment.company
+        FROM userdata
+        JOIN usercomment
+        ON userdata.id = usercomment.user_id;
+    `,[],(err: Error, results: QueryResult)=>{
+        if(err){
+            console.log(err);
+            res.json('error')
+        }else{
+            res.send(results.rows)
+            console.log(results.rows);
+            
+        }
+    })
+})
+
 
 app.listen(3001, () => console.log('Server connected'))
