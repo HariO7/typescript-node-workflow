@@ -1,4 +1,6 @@
 import express,{Application, Request, Response, NextFunction} from 'express'
+import { ReadVResult } from 'fs'
+import { QueryResult } from 'pg'
 import pool from './model/db.config'
 
 
@@ -89,6 +91,23 @@ app.delete('/read/:id',(req:Request,res:Response)=>{
            }
        }
     )
+})
+
+app.post('/comment/:id', (req:Request,res: Response)=>{
+    const {company} = req.body
+    const id = req.params.id
+    pool.query(`
+     INSERT INTO usercomment(user_id,company)
+     VALUES ($1,$2)
+    `,[id,company],(err: Error,results: QueryResult)=>{
+        if(err){
+            console.log(err);
+            res.json('error')
+        }else{
+            console.log('card added');
+            res.json(results.rows)
+        }
+    })
 })
 
 
